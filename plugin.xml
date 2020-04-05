@@ -2,7 +2,7 @@
 <plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
     xmlns:android="http://schemas.android.com/apk/res/android"
     id="cordova-sqlite-storage"
-    version="5.0.1-dev">
+    version="5.0.2-dev">
 
     <name>Cordova sqlite storage plugin - cordova-sqlite-storage plugin version</name>
 
@@ -94,6 +94,12 @@
         <framework src="src/windows/SQLite3-WinRT-sync/SQLite3/SQLite3.UWP.vcxproj" custom="true" type="projectReference" versions="10.*" />
     </platform>
 
+	<platform name="electron">
+        <js-module src="src/electron/sqlite-proxy.js" name="electronSQLiteProxy">
+            <runs />
+        </js-module>
+    </platform>
+	
 </plugin>
 
 <!-- vim: set expandtab : -->
