@@ -114,7 +114,7 @@ if (rowsAffected > 0) {
 	}
 ```
 
-which wasn't addressed by me - sqllite plugin hasn't build totalchanges function so I haven't explore what it is in  android and ios plugins yet. Just make POC which probably help you also start. 
+which was addressed by me only for insert and update occur - I haven't explore if it need more work. 
 
 **LICENSE:** MIT, with Apache 2.0 option for Android and Windows platforms (see [LICENSE.md](./LICENSE.md) for details, including third-party components used by this plugin)
 
