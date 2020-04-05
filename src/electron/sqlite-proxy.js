@@ -39,14 +39,27 @@ module.exports = {
 
 			var db = new sqlite3.Database(dbname);
 			dbmap[dbname] = db;
-			db.query = function (sql, params) {
+			db.queryall = function (sql, params) {
 			  var that = this;
 			  return new Promise(function (resolve, reject) {
 				that.all(sql, params, function (error, rows) {
+						console.log(this); 
 				  if (error)
 					reject(error);
 				  else
 					resolve({ rows: rows });
+				});
+			  });
+			};
+			
+			db.queryrun = function (sql, params) {
+			  var that = this;
+			  return new Promise(function (resolve, reject) {
+				that.run(sql, params, function (error, rows) {		
+				  if (error)
+					reject(error);
+				  else
+					resolve({ rows: rows, rowsAffected: this.changes, lastInsertRowid: this.lastID });
 				});
 			  });
 			};
@@ -111,7 +124,17 @@ module.exports = {
 		for (i=0; i<count; ++i) {
 			var e = executes[i];
 			try {
-			const result = await db.query(e.sql, e.params);
+				
+			const checker =	e.sql.substring(0, 10).toUpperCase();
+				
+			var result = null; 
+			
+			if (checker.startsWith('INSERT') || checker.startsWith('UPDATE'))
+			{
+			    result = await db.queryrun(e.sql, e.params);
+			} else {
+				result = await db.queryall(e.sql, e.params);
+			}
 			
 			console.log( "For query " + e.sql + " result: " + result); 
 			console.log(result); 
