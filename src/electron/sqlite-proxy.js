@@ -11,6 +11,10 @@
 
 var sqlite3 = global.require('sqlite3').verbose();
 
+const electron = global.require('electron');
+const app = (process.type === 'renderer') ? electron.remote.app : electron.app;
+const path = global.require('path');
+
 var dbmap = {};
 
 var nextTick = window.setImmediate || function(fun) {
@@ -33,17 +37,21 @@ module.exports = {
 				// NO LONGER EXPECTED due to BUG 666 workaround solution:
 				fail("INTERNAL ERROR: database already open for dbname: " + dbname);
 			}
+			
+
+			var con = app.getPath('userData');
+			
+			console.log('dbdbdbdbdbdbbdbdbd');
+			console.log(con);
+			console.log('dbdbbdbdbdbbdbbdbd');
 
 
-			console.log("open db name: " + dbname);
-
-			var db = new sqlite3.Database(dbname);
+			var db = new sqlite3.Database(path.join(con, dbname));
 			dbmap[dbname] = db;
 			db.queryall = function (sql, params) {
 			  var that = this;
 			  return new Promise(function (resolve, reject) {
-				that.all(sql, params, function (error, rows) {
-						console.log(this); 
+				that.all(sql, params, function (error, rows) { 
 				  if (error)
 					reject(error);
 				  else
@@ -59,7 +67,7 @@ module.exports = {
 				  if (error)
 					reject(error);
 				  else
-					resolve({ rows: rows, rowsAffected: this.changes, lastInsertRowid: this.lastID });
+					resolve({ rows: rows, rowsAffected: this.changes, insertId: this.lastID });
 				});
 			  });
 			};
@@ -118,9 +126,7 @@ module.exports = {
 		var results = [];
 		var i, count=executes.length;
 
-		//console.log("executes: " + JSON.stringify(executes));
-		//console.log("execute sql count: " + count);
-					//console.log("execute sql: " + e.sql + " params: " + JSON.stringify(e.params));
+
 		for (i=0; i<count; ++i) {
 			var e = executes[i];
 			try {
@@ -136,8 +142,6 @@ module.exports = {
 				result = await db.queryall(e.sql, e.params);
 			}
 			
-			console.log( "For query " + e.sql + " result: " + result); 
-			console.log(result); 
 			
 			results.push({
 					type: "success",

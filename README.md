@@ -65,6 +65,11 @@ Please remember that if yout want to run node plugin you have to use npm.
  
 To import any node module you have to use "global.require" - main require is overriden by cordova
 
+IMPORTANT 
+
+If plugin is not working check if electron-rebuild is in devDependencies (yes in dev - it will generate issue in console but ignore it)
+
+"electron-rebuild": "^1.11.0", <--
 
 ##Simple example 
 
@@ -102,7 +107,7 @@ private sqlsend(): void {
 
 ##Why it is work in progress ?
 
-In this example I onl resolved how to start sqlite node plugin in electron and made simple query. 
+In this example I only resolved how to start sqlite node plugin in electron and made simple query. 
 There are also some stuff in original plugin as
 
 ```typescript
